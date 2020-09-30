@@ -117,6 +117,12 @@ ui <- fluidPage(
                     title = "Analysis set up",
                     value = 1,
                     
+                    # Text
+                    h4(textOutput(
+                      outputId = "table_text",
+                      container = span,
+                    )),
+                    
                     # Print head of the data set
                     tableOutput(
                       outputId = "data_head"

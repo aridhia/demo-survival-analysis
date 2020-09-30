@@ -28,7 +28,12 @@ server <- function(input, output, session) {
       "Survival Probability: "
     })
 
+    output$table_text <- renderText({
+      "Dataset Preview: "
+    })
+    
     output$data_head <- renderTable(head(data))
+    
     
   
   #The values shown in the third column of the filtering depend on the column chosen, according to the column the options vary
