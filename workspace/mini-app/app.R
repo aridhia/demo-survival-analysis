@@ -99,6 +99,16 @@ ui <- fluidPage(
                      #First tab will be used to set up the variables used for the survival analysis
                      tabPanel("Analysis set up", 
                               value = 1,
+                              
+                              
+                              #Data Preview
+                              h3("Data Preview"),
+                              dataTableOutput(
+                                 outputId = "data_table"
+                                 
+                              ),
+                              
+                              
                               #This selectInput object lets the user choose the variable describing wheather the participant suffered an outcome or not (1/0)
                               selectInput(
                                  inputId = "endpoint",
@@ -107,6 +117,8 @@ ui <- fluidPage(
                                  multiple = FALSE,
                                  selected = "recurrence"
                               ),
+
+                              
                               #To select the variable containing the time object for the survival analysis, that is the time of the outcome or the censored time
                               selectInput(
                                  inputId = "time",
@@ -194,6 +206,15 @@ server <- function(input, output, session) {
       })
    })
    
+   output$data_table <- renderDataTable(
+      data,
+      options = list(
+         pageLength = 5,
+         dom = 'ltp',
+         autoWidth = TRUE,
+         scrollX = TRUE
+      )
+      )
 
    #The values shown in the third column of the filtering depend on the column chosen, according to the column the options vary
    output$col_value <- renderUI({
