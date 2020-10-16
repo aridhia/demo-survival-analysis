@@ -269,11 +269,9 @@ server <- function(input, output, session) {
       #Plotting the survival curves
       ggsurvplot(kmdata, pval = TRUE,
                  risk.table = TRUE,
-                 xscale = "d_y",
-                 break.time.by = 365.25,
-                 xlab = "Time since randomisation (years)",
+                 xlab = "Time",
                  #This can be changed according to what the analysis is measuring
-                 ylab = "Without clinical recurrence(%)",
+                 ylab = "Survival",
                  legend = "bottom",
                  censor = FALSE,
                  tables.y.text = FALSE,
@@ -290,8 +288,7 @@ server <- function(input, output, session) {
    #Survival table
    output$survprob <- renderTable({
       
-      table <- as.data.frame(summary(runSur(), times = input$xvalue*365.25)[c("surv", "time", "strata")]) %>%
-         mutate(time = time/365.25)
+      table <- as.data.frame(summary(runSur(), times = input$xvalue)[c("surv", "time", "strata")]) 
       table
    })
    
