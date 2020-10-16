@@ -12,9 +12,7 @@ library(tidyr)
 
 
 #Importing data
-#This data has been generated with the script outcome.R in this demo.
-#For the app to run it is only necessary to have a csv file called "survival_analysis.csv" in the same folder containing information about the outcome and the time object to do the survival analysis
-data <- read_csv("./bladder_recurrence.csv")
+source("./data.R")
 
 ui <- fluidPage(
    
@@ -34,7 +32,7 @@ ui <- fluidPage(
                              #The choices come directly from the column names of the csv file given to the app 
                              choices = names(data),
                              #This selected choice can be deleted, in our case is treatmentno to ease the demo
-                             selected = "treatmentno"
+                             selected = "treatment"
                           ),
                           #Select the variables included in the table
                           selectInput(
@@ -59,9 +57,9 @@ ui <- fluidPage(
                              label = "Choose a stratification variable",
                              choices = names(data),
                              #This selected choice can be deleted, in our case is treatmentno to ease the demo
-                             selected = "treatmentno"
+                             selected = "treatment"
                           ),
-                          sliderInput('xvalue', 'Survival Years =', value = 0, min = 0, max = 4, step = 0.25, round = TRUE)
+                          sliderInput('xvalue', 'Survival Years =', min = min(data$time), max = max(data$time), value = min(data$time))
                           
                           
          ),
@@ -106,14 +104,16 @@ ui <- fluidPage(
                                  inputId = "endpoint",
                                  label = "Select variable with survival outcome information",
                                  choices = names(data),
-                                 multiple = FALSE
+                                 multiple = FALSE,
+                                 selected = "recurrence"
                               ),
                               #To select the variable containing the time object for the survival analysis, that is the time of the outcome or the censored time
                               selectInput(
                                  inputId = "time",
                                  label = "Select variable with survival time information",
                                  choices = names(data),
-                                 multiple = FALSE
+                                 multiple = FALSE,
+                                 selected = "time"
                               ),
                               
                               #Lets the user choose if they want to filter the dataset 
@@ -199,24 +199,27 @@ server <- function(input, output, session) {
    output$col_value <- renderUI({
       #Select only the column choosen to apply the filter
       x <- as.data.frame(data %>% select(input$column))
+      class <- sapply(x, class)
       #If the column selected is not a character, a sliderInput will appear to choose the limits of the filter
-      if (!is.character(x[1,])){
-         x <- na.omit(x)
-         sliderInput("value", "Value", min = round(min(x)), max = round(max(x)), value = round(max(x)))
+      if (class == "factor" | class == "character"){
+         selectInput("value", "Value", choices = x, selected = x[1])
+         
          #If the column is a character, the choices will be the unique elements of the column
       } else{
-         selectInput("value", "Value", choices = x, selected = x[1])
+         x <- na.omit(x)
+         sliderInput("value", "Value", min = round(min(x)), max = round(max(x)), value = round(max(x)))
       }
    })
    
    #String made to subset the subjects and display in the sidebar    
    filtering_string <- reactive({
       x <- as.data.frame(data %>% select(input$column))
+      class  <- sapply(x, class)
       #If the variable is numeric we do not want "" 
-      if (is.numeric(x[1, ])){
-         paste0(input$column, " ", input$condition, input$value)
-      }else{
+      if (class == "factor" | class == "character"){
          paste0(input$column, " ", input$condition, "\ '", input$value, "\'")
+      }else{
+         paste0(input$column, " ", input$condition, " ", input$value)
       }
    })
    
