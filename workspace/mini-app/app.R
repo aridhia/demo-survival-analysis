@@ -1,7 +1,9 @@
-#To use in workspace:
-#.libPaths("/home/workspace/R/3.5.0")
 
-#PACKAGES
+########################
+####### PACKAGES #######
+########################
+
+
 library(shiny)
 library(arsenal)
 library(readr)
@@ -11,37 +13,62 @@ library(dplyr)
 library(tidyr)
 
 
-#Importing data
+##############################
+####### IMPORTING DATA #######
+##############################
+
 source("./data.R")
 
-ui <- fluidPage(
+
+
+##################
+####### UI #######
+##################
+
+
+ui <- 
+   fluidPage(
    
-   #The title panel is displayed in the top left hand corner by default 
+   #####################
+   ####### TITLE #######
+   #####################
+       
    titlePanel("Survival Analysis"),
    
-   #Start by setting up the sidebar panel   
+  
+   ########################
+   ####### SIDE BAR #######
+   ########################
+   
+     
    sidebarLayout(
+      
       sidebarPanel(
          
-         #This will only appear in the tab2; the table tab
+         # Tab 2 -------------------------------------
+         
          conditionalPanel(condition = "input.tabs == 2",
-                          #Used to select the stratification variable for the analysis
+                          
+                          # used to select the stratification variable for the analysis
+                          
                           selectInput(
                              inputId = "stratification",
                              label = "Choose a stratification variable",
-                             #The choices come directly from the column names of the csv file given to the app 
                              choices = names(data),
-                             #This selected choice can be deleted, in our case is treatmentno to ease the demo
                              selected = "treatment"
                           ),
-                          #Select the variables included in the table
+                          
+                          # Select the variables included in the table
+                          
                           selectInput(
                              inputId = "variables",
                              label = "Choose variables: ",
                              choices = names(data),
                              multiple = TRUE
                           ),
-                          #p value optional
+                          
+                          # p value optional
+                          
                           radioButtons(
                              inputId = "p",
                              label = "Show p-value?",
@@ -50,28 +77,34 @@ ui <- fluidPage(
                           )      
          ),
          
-         #Will only appear in tab3
+         
+         # Tab 3 -------------------------------------
+         
          conditionalPanel(condition = "input.tabs == 3",
+                          
                           selectInput(
                              inputId = "stratification_kep",
                              label = "Choose a stratification variable",
                              choices = names(data),
-                             #This selected choice can be deleted, in our case is treatmentno to ease the demo
                              selected = "treatment"
                           ),
+                          
                           sliderInput('xvalue', 'Survival Years =', min = min(data$time), max = max(data$time), value = min(data$time))
                           
                           
          ),
          
-         #Will appear in tab4
+         # Tab 4 -------------------------------------
+         
          conditionalPanel(condition = "input.tabs == 4",
+                          
                           selectInput(
                              inputId = "cox_variables",
                              label = "Choose variables to add to the model",
                              choices = names(data),
                              multiple = TRUE
                           ),
+                          
                           selectInput(
                              inputId = "cox_strata",
                              label = "Choose variables to add as strata for the model",
@@ -81,27 +114,45 @@ ui <- fluidPage(
                           
          ),
          
-         #Will only appear when the user has decided to subset a part of the population
+
+         # Filter statement -------------------------------------
+         
          conditionalPanel(condition = "input.filtering == 1",
+                          
                           p(textOutput(outputId = "caption", container = span)),
-                          textOutput("condition")),
-         #Will appear when there is no filter applied
+                          textOutput("condition")
+         ),
+         
+         # Will appear when there is no filter applied
+         
          conditionalPanel(condition = "input.filtering == 0",
+                          
                           p(textOutput(outputId = "notfilter", container = span)),
-                          textOutput("condition0"))
+                          textOutput("condition0")
+         )
+         
+         
       ),
       
-      #This will show in the main panel of the app
+      
+      
+      ##########################
+      ####### MAIN PANEL #######
+      ##########################
+      
+      
       mainPanel(
-         #The main panel will be divided in tabs
+         
+         # The main panel will be divided in tabs
          tabsetPanel(id = "tabs",
                      
-                     #First tab will be used to set up the variables used for the survival analysis
+                     # Tab 1 - ANALYSIS SET UP ----------------------------------------------------------------------
+                     
                      tabPanel("Analysis set up", 
                               value = 1,
                               
                               
-                              #Data Preview
+                              # Data Preview
                               h3("Data Preview"),
                               dataTableOutput(
                                  outputId = "data_table"
@@ -109,7 +160,7 @@ ui <- fluidPage(
                               ),
                               
                               
-                              #This selectInput object lets the user choose the variable describing wheather the participant suffered an outcome or not (1/0)
+                              # Choose the variable describing whether the participant suffered an outcome or not
                               selectInput(
                                  inputId = "endpoint",
                                  label = "Select variable with survival outcome information",
@@ -119,7 +170,7 @@ ui <- fluidPage(
                               ),
 
                               
-                              #To select the variable containing the time object for the survival analysis, that is the time of the outcome or the censored time
+                              # Choose variable containing the time object for the survival analysis
                               selectInput(
                                  inputId = "time",
                                  label = "Select variable with survival time information",
@@ -128,7 +179,7 @@ ui <- fluidPage(
                                  selected = "time"
                               ),
                               
-                              #Lets the user choose if they want to filter the dataset 
+                              # Lets the user choose if they want to filter the dataset 
                               radioButtons(
                                  inputId = "filtering",
                                  label = "Do you want filter the dataset?",
@@ -136,30 +187,32 @@ ui <- fluidPage(
                                  selected = 0
                                  
                               ),
-                              #The Panel will only be visible if the user decides to filter the data by clicking "Yes" in the previous radioButtons 
+                              
+                              # The Panel will only be visible if the user decides to filter the dataset
                               conditionalPanel(condition = "input.filtering == 1",
-                                               #It will show 3 columns: Variable name, Boolean condition and filtering value
                                                column(4, selectInput("column", "Filter By:", choices = names(data))),
                                                column(4, selectInput("condition", "Boolean", choices = c("==", "!=", ">", "<"))),
-                                               #Filtering values depend on the column chosen, so it's an output
                                                column(4, uiOutput("col_value"))
                               ),
                               
                      ),
                      
-                     #Second tab is for displaying a table comparing characteristics of the population under study
+                     # Tab 2 - TABLE OF CHARACTERISTICS ----------------------------------------------------------------------
+                     
                      tabPanel("Table", 
                               value = 2,
+                              
                               #The output is a table
                               tableOutput(
                                  outputId = "tab"
                               )
                      ),
                      
-                     #Third tab displays the Keplan-Meier graph and a table with the survival probability at a chosen time
+                     # Tab 3 - KEPLAN-MEIER ----------------------------------------------------------------------
+                     
                      tabPanel("Keplan-Meier", 
                               value = 3,
-                              #Text before table
+                              
                               p(textOutput(outputId = "surv_caption")),
                               
                               #Table with survival probability
@@ -172,11 +225,15 @@ ui <- fluidPage(
                                  height = "600px"
                               )
                      ),
-                     #Fourth tab is to develop the desired Cox Model using the covariates the user find more appropiate; it also allows to add strata to the model
+                     
+                     # Tab 4 - COX MODEL ----------------------------------------------------------------------
+                     
                      tabPanel("Cox Model", value = 4,
+                              
                               tableOutput(
                                  outputId = "cox"
                               ),
+                              
                               #Print the model in text
                               verbatimTextOutput(
                                  outputId = "cox_model"
@@ -189,14 +246,18 @@ ui <- fluidPage(
 
 
 
+######################
+####### SERVER #######
+######################
+
 server <- function(input, output, session) {
    
-   #Text shown before printed condition in the sidebar panel
+   # Text shown before printed condition in the sidebar panel
    local({
       output$caption <- renderText({
          "Subgroup being used: "
       })
-      #Text only shown if the data is not filtered
+      # Text only shown if the data is not filtered
       output$notfilter <- renderText({
          "Data not filtered"
       })
@@ -256,8 +317,8 @@ server <- function(input, output, session) {
       if (input$filtering == 0){
          return(data)
       } else {
-         data <- filter_(data, filtering_string())
-         return(data)
+         filtered_data <- filter_(data, filtering_string())
+         return(filtered_data)
       }      
    })
    
@@ -275,7 +336,7 @@ server <- function(input, output, session) {
       }        
    })
    
-   #Create the final table that will be displayed at the second tab
+   # Create the final table that will be displayed at the second tab
    output$tab <- renderTable({
       as.data.frame(summary(tb(), text = "html"))
       
