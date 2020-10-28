@@ -45,11 +45,11 @@ ui <-
       
       sidebarPanel(
          
-         # Tab 2 -------------------------------------
+         # Tab 2 TABLE OF CHARACTERISTICS -------------------------------------
          
          conditionalPanel(condition = "input.tabs == 2",
                           
-                          # used to select the stratification variable for the analysis
+                          # Select the stratification variable
                           
                           selectInput(
                              inputId = "stratification",
@@ -78,9 +78,11 @@ ui <-
          ),
          
          
-         # Tab 3 -------------------------------------
+         # Tab 3 KEPLAN-MEIER -------------------------------------
          
          conditionalPanel(condition = "input.tabs == 3",
+                          
+                          # Select stratification of variable
                           
                           selectInput(
                              inputId = "stratification_kep",
@@ -89,14 +91,18 @@ ui <-
                              selected = "treatment"
                           ),
                           
+                          # Select years to get survival probability
+                          
                           sliderInput('xvalue', 'Survival Years =', min = min(data$time), max = max(data$time), value = min(data$time))
                           
                           
          ),
          
-         # Tab 4 -------------------------------------
+         # Tab 4  COX ANALYSIS -------------------------------------
          
          conditionalPanel(condition = "input.tabs == 4",
+                          
+                          # Select variables to add to the model
                           
                           selectInput(
                              inputId = "cox_variables",
@@ -104,6 +110,8 @@ ui <-
                              choices = names(data),
                              multiple = TRUE
                           ),
+                          
+                          # Select stratas to add to the model
                           
                           selectInput(
                              inputId = "cox_strata",
@@ -119,6 +127,8 @@ ui <-
          
          conditionalPanel(condition = "input.filtering == 1",
                           
+                          # Will print the applied filter
+                          
                           p(textOutput(outputId = "caption", container = span)),
                           textOutput("condition")
          ),
@@ -126,6 +136,8 @@ ui <-
          # Will appear when there is no filter applied
          
          conditionalPanel(condition = "input.filtering == 0",
+                          
+                          # Will print if no filter is applied
                           
                           p(textOutput(outputId = "notfilter", container = span)),
                           textOutput("condition0")
@@ -143,7 +155,8 @@ ui <-
       
       mainPanel(
          
-         # The main panel will be divided in tabs
+         # The main panel is divided in tabs
+         
          tabsetPanel(id = "tabs",
                      
                      # Tab 1 - ANALYSIS SET UP ----------------------------------------------------------------------
@@ -202,7 +215,7 @@ ui <-
                      tabPanel("Table", 
                               value = 2,
                               
-                              #The output is a table
+                              # Table output
                               tableOutput(
                                  outputId = "tab"
                               )
@@ -215,14 +228,14 @@ ui <-
                               
                               p(textOutput(outputId = "surv_caption")),
                               
-                              #Table with survival probability
+                              # Table with survival probability
                               tableOutput(outputId = "survprob"),
                               
-                              #The output is a plot
+                              # The output is a plot
                               plotOutput(
                                  outputId = "kep",
-                                 #This parameter is only to make the graph bigger
-                                 height = "600px"
+                                 height = "600px"    # Make the graph bigger
+
                               )
                      ),
                      
@@ -230,11 +243,12 @@ ui <-
                      
                      tabPanel("Cox Model", value = 4,
                               
+                              # Cox model table
                               tableOutput(
                                  outputId = "cox"
                               ),
                               
-                              #Print the model in text
+                              # Print the model in text
                               verbatimTextOutput(
                                  outputId = "cox_model"
                               )
@@ -252,12 +266,12 @@ ui <-
 
 server <- function(input, output, session) {
    
-   # Text shown before printed condition in the sidebar panel
+   # Written statements   
    local({
       output$caption <- renderText({
          "Subgroup being used: "
       })
-      # Text only shown if the data is not filtered
+      
       output$notfilter <- renderText({
          "Data not filtered"
       })
@@ -267,6 +281,11 @@ server <- function(input, output, session) {
       })
    })
    
+   # Tab 1 - ANALYSIS SET UP ----------------------------------------------------------------------
+   
+   
+   # DataTable to Preview Data
+   
    output$data_table <- renderDataTable(
       data,
       options = list(
@@ -275,46 +294,42 @@ server <- function(input, output, session) {
          autoWidth = TRUE,
          scrollX = TRUE
       )
-      )
+   )
 
-   #The values shown in the third column of the filtering depend on the column chosen, according to the column the options vary
+   # Options for filtering depending on the column chosen
    output$col_value <- renderUI({
-      #Select only the column choosen to apply the filter
-      x <- as.data.frame(data %>% select(input$column))
+      x <- as.data.frame(data %>% select(input$column)) # Select only the column chosen to apply the filter
       class <- sapply(x, class)
-      #If the column selected is not a character, a sliderInput will appear to choose the limits of the filter
+      # If the column selected is not a character, a sliderInput will appear to choose the limits of the filter
       if (class == "factor" | class == "character"){
          selectInput("value", "Value", choices = x, selected = x[1])
-         
-         #If the column is a character, the choices will be the unique elements of the column
+      # If the column is a character, the choices will be the unique elements of the column
       } else{
          x <- na.omit(x)
          sliderInput("value", "Value", min = round(min(x)), max = round(max(x)), value = round(max(x)))
       }
    })
    
-   #String made to subset the subjects and display in the sidebar    
+   # String made to subset the subjects and display in the sidebar    
    filtering_string <- reactive({
       x <- as.data.frame(data %>% select(input$column))
       class  <- sapply(x, class)
-      #If the variable is numeric we do not want "" 
-      if (class == "factor" | class == "character"){
+     if (class == "factor" | class == "character"){
          paste0(input$column, " ", input$condition, "\ '", input$value, "\'")
       }else{
-         paste0(input$column, " ", input$condition, " ", input$value)
+         paste0(input$column, " ", input$condition, " ", input$value)   # If the variable is numeric we do not want ""
       }
    })
    
-   #Text in the sidebar showing population subset 
+   # Text in the sidebar showing population subset 
    output$condition <- renderText({
       filtering_string()
    })
    
    
-   #Subsetting the dataset according to the condition
+   # Subsetting the dataset according to the condition
    subset_data <- reactive({
-      #If user does not want to subset, the complete dataset is used
-      if (input$filtering == 0){
+      if (input$filtering == 0){ # If user does not want to subset, the complete dataset is used
          return(data)
       } else {
          filtered_data <- filter_(data, filtering_string())
@@ -322,14 +337,16 @@ server <- function(input, output, session) {
       }      
    })
    
-   #Starting to elaborate the table of characteristics  
+   
+   # Tab 2 - TABLE OF CHARACTERISTICS ----------------------------------------------------------------------
+   
+   
+   # Starting to elaborate the table of characteristics  
    tb <- reactive({
-      #Message if the user does not chose characteristics to compare
-      validate(need(input$variables, "Please select characteristics to compare"))
-      #If the user wants the p value this code will be active
-      if (input$p == "Yes"){
+      validate(need(input$variables, "Please select characteristics to compare")) # Message if the user does not chose characteristics to compare
+      
+      if (input$p == "Yes"){                                                      # If the user wants the p value this code will be active
          tableby(formulize(input$stratification, x = input$variables), data = subset_data())
-         #When the user does not want the p value the table is coded as test=FALSE
       } else {
          my_controls <- tableby.control(test = FALSE)
          tableby(formulize(input$stratification, x=input$variables), data = subset_data(), control = my_controls)
@@ -344,18 +361,20 @@ server <- function(input, output, session) {
    )
    
    
-   #Construct the Keplan-Meier plot 
+   # Tab 3 - KEPLAN-MEIER ----------------------------------------------------------------------
+   
+   
+   # Construct the Keplan-Meier plot 
    output$kep <- renderPlot({
       
       
-      #Survival function - for ggsurvplot has to be inside the renderPlot function
+      # Survival function - for ggsurvplot has to be inside the renderPlot function
       kmdata <- surv_fit(as.formula(paste('Surv(', input$time, ',', input$endpoint, ') ~ ',input$stratification_kep)),data=subset_data())
       
-      #Plotting the survival curves
+      # Plotting the survival curves
       ggsurvplot(kmdata, pval = TRUE,
                  risk.table = TRUE,
                  xlab = "Time",
-                 #This can be changed according to what the analysis is measuring
                  ylab = "Survival",
                  legend = "bottom",
                  censor = FALSE,
@@ -365,19 +384,21 @@ server <- function(input, output, session) {
       
    })
    
-   #Survival function outside renderPlot function
+   # Survival function outside renderPlot function
    runSur <- reactive({
       survfit(as.formula(paste('Surv(', input$time, ',', input$endpoint, ') ~ ', input$stratification_kep)), data=subset_data())
    })
    
-   #Survival table
+   # Survival table
    output$survprob <- renderTable({
       
       table <- as.data.frame(summary(runSur(), times = input$xvalue)[c("surv", "time", "strata")]) 
       table
    })
    
-   #Cox Analysis fit
+   # Tab 4 - COX MODEL ----------------------------------------------------------------------
+   
+   
    cox_fit_text <- reactive({
       
       #Create the strings that will be used to generate the cox model
@@ -398,8 +419,7 @@ server <- function(input, output, session) {
    
    #Printing the cox model in text
    output$cox_model <- renderText({
-      #There has to be a variable sected
-      validate(need(input$cox_variables, ""))
+      validate(need(input$cox_variables, ""))    # A variable has to be selected
       cox_fit_text()
    })
    
