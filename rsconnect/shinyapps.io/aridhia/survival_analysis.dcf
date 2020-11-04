@@ -1,0 +1,13 @@
+name: survival_analysis
+title: survival_analysis
+username:
+account: aridhia
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3152858
+bundleId: 3815636
+url: https://aridhia.shinyapps.io/survival_analysis/
+when: 1604413364.49026
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|README.md

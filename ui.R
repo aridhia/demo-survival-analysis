@@ -5,7 +5,6 @@
 ##################
 
 
-#ui <- 
   fluidPage(
     
     #####################
@@ -108,7 +107,7 @@
                          
                          # Will print the applied filter
                          
-                         p(textOutput(outputId = "caption", container = span)),
+                         p("Subgroup being used: "),
                          textOutput("condition")
         ),
         
@@ -118,7 +117,7 @@
                          
                          # Will print if no filter is applied
                          
-                         p(textOutput(outputId = "notfilter", container = span)),
+                         p("The data is not filtered"),
                          textOutput("condition0")
         )
         
@@ -145,10 +144,10 @@
                              
                              
                              # Data Preview
-                             h3("Data Preview"),
-                             dataTableOutput(
-                               outputId = "data_table"
-                               
+                             h4(strong("Data Preview")),
+                             div(
+                               style = "font-size: 80%",
+                               dataTableOutput("data_table")
                              ),
                              
                              
@@ -205,7 +204,7 @@
                     tabPanel("Keplan-Meier", 
                              value = 3,
                              
-                             p(textOutput(outputId = "surv_caption")),
+                             p("Survival Probability: "),
                              
                              # Table with survival probability
                              tableOutput(outputId = "survprob"),
@@ -231,7 +230,11 @@
                              verbatimTextOutput(
                                outputId = "cox_model"
                              )
-                    )
+                    ),
+                    
+                    # Tab 5 - HELP --------------------------------------------------------------------
+                    
+                    documentation_tab()
         )
       )
     )

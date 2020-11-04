@@ -13,13 +13,6 @@ library(dplyr)
 library(tidyr)
 
 
-##############################
-####### IMPORTING DATA #######
-##############################
-
-source("./data.R")
-
-
 
 ######################
 ####### SERVER #######
@@ -27,35 +20,16 @@ source("./data.R")
 
 
 function(input, output, session) {
-   
-   # Written statements   
-   local({
-      output$caption <- renderText({
-         "Subgroup being used: "
-      })
-      
-      output$notfilter <- renderText({
-         "Data not filtered"
-      })
-      
-      output$surv_caption <- renderText({
-         "Survival Probability: "
-      })
-   })
-   
+
    # Tab 1 - ANALYSIS SET UP ----------------------------------------------------------------------
    
    
    # DataTable to Preview Data
    
-   output$data_table <- renderDataTable(
+   output$data_table <- DT::renderDataTable(
       data,
-      options = list(
-         pageLength = 5,
-         dom = 'ltp',
-         autoWidth = TRUE,
-         scrollX = TRUE
-      )
+      options = list(scrollX = TRUE, pageLenght = 5, dom = 't'),
+      class = "display nowrap compact"
    )
 
    # Options for filtering depending on the column chosen
