@@ -146,7 +146,7 @@
                              # Data Preview
                              h4(strong("Data Preview")),
                              div(
-                               style = "font-size: 80%",
+                               style = "width: 70%; font-size : 80%",
                                dataTableOutput("data_table")
                              ),
                              

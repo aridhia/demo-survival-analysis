@@ -11,7 +11,9 @@ library(survminer)
 library(survival)
 library(dplyr)
 library(tidyr)
+library(DT)
 
+data <- read.csv("./data/bladder.csv")
 
 
 ######################
@@ -28,7 +30,7 @@ function(input, output, session) {
    
    output$data_table <- DT::renderDataTable(
       data,
-      options = list(scrollX = TRUE, pageLenght = 5, dom = 't'),
+      options = list(scrollX = TRUE, pageLength = 5, dom = 't'),
       class = "display nowrap compact"
    )
 
