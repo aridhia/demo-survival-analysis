@@ -40,7 +40,7 @@
                          
                          selectInput(
                            inputId = "variables",
-                           label = "Choose variables: ",
+                           label = "Choose variables to compare: ",
                            choices = names(data),
                            multiple = TRUE
                          ),
@@ -71,7 +71,7 @@
                          
                          # Select years to get survival probability
                          
-                         sliderInput('xvalue', 'Survival Years =', min = min(data$time), max = max(data$time), value = min(data$time))
+                         sliderInput('xvalue', 'Select a time: ', min = min(data$time), max = max(data$time), value = min(data$time))
                          
                          
         ),
@@ -204,8 +204,7 @@
                     tabPanel("Keplan-Meier", 
                              value = 3,
                              
-                             p("Survival Probability: "),
-                             
+                             p("This table will show the survival probability on the selected time in the slider."),
                              # Table with survival probability
                              tableOutput(outputId = "survprob"),
                              

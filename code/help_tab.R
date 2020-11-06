@@ -36,7 +36,7 @@ documentation_tab <- function() {
                         variables from the left-hand menu")
                        ),
                        p("You can experiment with any number of combinations, selecting different outcome variables, stratification variables or adding different variables 
-                         to the Cox Model"),
+                         to the Cox Model."),
                        br()
                      ),
                      column(

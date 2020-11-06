@@ -1,20 +1,4 @@
 
-########################
-####### PACKAGES #######
-########################
-
-
-library(shiny)
-library(arsenal)
-library(readr)
-library(survminer)
-library(survival)
-library(dplyr)
-library(tidyr)
-library(DT)
-
-data <- read.csv("./data/bladder.csv")
-
 
 ######################
 ####### SERVER #######
