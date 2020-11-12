@@ -2,6 +2,6 @@ Title: Survival Analysis
 Author: Anna Domenech
 AuthorUrl: http://www.rstudio.com/
 License: GPL-3
-DisplayMode: Showcase
+DisplayMode: normal
 Tags: survival-analysis
 Type: Shiny
