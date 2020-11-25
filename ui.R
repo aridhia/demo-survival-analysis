@@ -23,27 +23,33 @@
       
       sidebarPanel(
         
+        # Tab 3 ANALYSIS SET UP --------------------------------------------
+        
+        conditionalPanel(condition = "input.tabs == 1",
+                         
+                         # Select data
+                         selectInput(
+                           inputId = "choose_data",
+                           label = "Choose data",
+                           choices = tables
+                         )
+          
+          ),
+        
+        
+        
+        
         # Tab 2 TABLE OF CHARACTERISTICS -------------------------------------
         
         conditionalPanel(condition = "input.tabs == 2",
                          
                          # Select the stratification variable
                          
-                         selectInput(
-                           inputId = "stratification",
-                           label = "Choose a stratification variable",
-                           choices = names(data),
-                           selected = "treatment"
-                         ),
+                         chooseColumnUI("stratification"),
                          
                          # Select the variables included in the table
                          
-                         selectInput(
-                           inputId = "variables",
-                           label = "Choose variables to compare: ",
-                           choices = names(data),
-                           multiple = TRUE
-                         ),
+                         chooseColumnUI("variables"),
                          
                          # p value optional
                          
@@ -62,12 +68,7 @@
                          
                          # Select stratification of variable
                          
-                         selectInput(
-                           inputId = "stratification_kep",
-                           label = "Choose a stratification variable",
-                           choices = names(data),
-                           selected = "treatment"
-                         ),
+                         chooseColumnUI("stratification_kep"),
                          
                          # Select years to get survival probability
                          
@@ -82,21 +83,11 @@
                          
                          # Select variables to add to the model
                          
-                         selectInput(
-                           inputId = "cox_variables",
-                           label = "Choose variables to add to the model",
-                           choices = names(data),
-                           multiple = TRUE
-                         ),
+                         chooseColumnUI("cox_variables"),
                          
                          # Select stratas to add to the model
                          
-                         selectInput(
-                           inputId = "cox_strata",
-                           label = "Choose variables to add as strata for the model",
-                           choices = names(data),
-                           multiple = TRUE
-                         )
+                         chooseColumnUI("cox_strata")
                          
         ),
         
@@ -152,23 +143,11 @@
                              
                              
                              # Choose the variable describing whether the participant suffered an outcome or not
-                             selectInput(
-                               inputId = "endpoint",
-                               label = "Select variable with survival outcome information",
-                               choices = names(data),
-                               multiple = FALSE,
-                               selected = "recurrence"
-                             ),
+                             chooseColumnUI("endpoint"),
                              
                              
                              # Choose variable containing the time object for the survival analysis
-                             selectInput(
-                               inputId = "time",
-                               label = "Select variable with survival time information",
-                               choices = names(data),
-                               multiple = FALSE,
-                               selected = "time"
-                             ),
+                             chooseColumnUI("time"),
                              
                              # Lets the user choose if they want to filter the dataset 
                              radioButtons(
@@ -181,9 +160,10 @@
                              
                              # The Panel will only be visible if the user decides to filter the dataset
                              conditionalPanel(condition = "input.filtering == 1",
-                                              column(4, selectInput("column", "Filter By:", choices = names(data))),
+                                              column(4, chooseColumnUI("column")),
                                               column(4, selectInput("condition", "Boolean", choices = c("==", "!=", ">", "<"))),
-                                              column(4, uiOutput("col_value"))
+                                              column(4, chooseValueUI("col_value"))
+                                              # column(4, uiOutput("col_value"))
                              ),
                              
                     ),

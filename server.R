@@ -9,37 +9,37 @@ function(input, output, session) {
 
    # Tab 1 - ANALYSIS SET UP ----------------------------------------------------------------------
    
+   data <- reactive({
+      table_name <- input$choose_data
+      if (table_name == "") {
+         return(NULL)
+      }
+      file <- file.path("data", paste(table_name))
+      read.csv(file)
+   })
    
    # DataTable to Preview Data
    
    output$data_table <- DT::renderDataTable(
-      data,
+      data(),
       options = list(scrollX = TRUE, pageLength = 5, dom = 't'),
       class = "display nowrap compact"
    )
-
-   # Options for filtering depending on the column chosen
-   output$col_value <- renderUI({
-      x <- as.data.frame(data %>% select(input$column)) # Select only the column chosen to apply the filter
-      class <- sapply(x, class)
-      # If the column selected is not a character, a sliderInput will appear to choose the limits of the filter
-      if (class == "factor" | class == "character"){
-         selectInput("value", "Value", choices = x, selected = x[1])
-      # If the column is a character, the choices will be the unique elements of the column
-      } else{
-         x <- na.omit(x)
-         sliderInput("value", "Value", min = round(min(x)), max = round(max(x)), value = round(max(x)))
-      }
-   })
    
+
+   
+
+   filter_column <- callModule(choosenColumn, "column", data, label = "Choose column to filter by:")
+   filter_values <- callModule(columnValues, "column_value", data, column = filter_column)
+   filter_value <- callModule(chooseValue, "col_value", values = filter_values)
+
    # String made to subset the subjects and display in the sidebar    
    filtering_string <- reactive({
-      x <- as.data.frame(data %>% select(input$column))
-      class  <- sapply(x, class)
-     if (class == "factor" | class == "character"){
-         paste0(input$column, " ", input$condition, "\ '", input$value, "\'")
+     if (is.numeric(filter_value())){
+        paste0(filter_column(), " ", input$condition, " ", filter_value()) 
+        
       }else{
-         paste0(input$column, " ", input$condition, " ", input$value)   # If the variable is numeric we do not want ""
+         paste0(filter_column(), " ", input$condition, "\ '", filter_value(), "\'")
       }
    })
    
@@ -52,9 +52,9 @@ function(input, output, session) {
    # Subsetting the dataset according to the condition
    subset_data <- reactive({
       if (input$filtering == 0){ # If user does not want to subset, the complete dataset is used
-         return(data)
+         return(data())
       } else {
-         filtered_data <- filter_(data, filtering_string())
+         filtered_data <- filter_(data(), filtering_string())
          return(filtered_data)
       }      
    })
@@ -62,16 +62,18 @@ function(input, output, session) {
    
    # Tab 2 - TABLE OF CHARACTERISTICS ----------------------------------------------------------------------
    
+   stratification_table <- callModule(choosenColumn, "stratification", data, label = "Choose the stratification variable:")
+   variables_table <- callModule(choosenColumn, "variables", data, label = "Choose variables to add to the table:", multiple = TRUE)
    
    # Starting to elaborate the table of characteristics  
    tb <- reactive({
-      validate(need(input$variables, "Please select characteristics to compare")) # Message if the user does not chose characteristics to compare
+      validate(need(variables_table(), "Please select characteristics to compare")) # Message if the user does not chose characteristics to compare
       
       if (input$p == "Yes"){                                                      # If the user wants the p value this code will be active
-         tableby(formulize(input$stratification, x = input$variables), data = subset_data())
+         tableby(formulize(stratification_table(), x = variables_table()), data = subset_data())
       } else {
          my_controls <- tableby.control(test = FALSE)
-         tableby(formulize(input$stratification, x=input$variables), data = subset_data(), control = my_controls)
+         tableby(formulize(stratification_table(), x=variables_table()), data = subset_data(), control = my_controls)
       }        
    })
    
@@ -85,13 +87,16 @@ function(input, output, session) {
    
    # Tab 3 - KEPLAN-MEIER ----------------------------------------------------------------------
    
+   endpoint <- callModule(choosenColumn, "endpoint", data, label = "Choose column that contains endpoint information:")
+   time <- callModule(choosenColumn, "time", data, label = "Choose column that contains survival time information:")
+   stratification_kep <- callModule(choosenColumn, "stratification_kep", data, label = "Choose the stratification variable:")
    
    # Construct the Keplan-Meier plot 
    output$kep <- renderPlot({
       
       
       # Survival function - for ggsurvplot has to be inside the renderPlot function
-      kmdata <- surv_fit(as.formula(paste('Surv(', input$time, ',', input$endpoint, ') ~ ',input$stratification_kep)),data=subset_data())
+      kmdata <- surv_fit(as.formula(paste('Surv(', time(), ',', endpoint(), ') ~ ',stratification_kep())),data=subset_data())
       
       # Plotting the survival curves
       ggsurvplot(kmdata, pval = TRUE,
@@ -108,7 +113,7 @@ function(input, output, session) {
    
    # Survival function outside renderPlot function
    runSur <- reactive({
-      survfit(as.formula(paste('Surv(', input$time, ',', input$endpoint, ') ~ ', input$stratification_kep)), data=subset_data())
+      survfit(as.formula(paste('Surv(', time(), ',', endpoint(), ') ~ ', stratification_kep())), data=subset_data())
    })
    
    # Survival table
@@ -121,34 +126,38 @@ function(input, output, session) {
    # Tab 4 - COX MODEL ----------------------------------------------------------------------
    
    
+   cox_variables <- callModule(choosenColumn, "cox_variables", data, label = "Choose variables to add to the model:", multiple = TRUE)
+   cox_strata <- callModule(choosenColumn, "cox_strata", data, label = "Choose strata to add to the model:", multiple = TRUE)
+   
+   
    cox_fit_text <- reactive({
       
       #Create the strings that will be used to generate the cox model
-      adjs_variables <- paste0(input$cox_variables, collapse = " + ")   
-      strat_variables <- paste0("strata(", input$cox_strata, ")", collapse = " + ")
+      adjs_variables <- paste(cox_variables(), collapse = " + ")   
+      strat_variables <- paste("strata(", cox_strata(), ")", collapse = " + ")
       
       #To add stratification variables to the model
-      if(!is.null(input$cox_strata)){
+      if(!is.null(cox_strata())){
          
-         paste0('Surv(', input$time, ',', input$endpoint, ') ~ ', adjs_variables, " + ", strat_variables)
+         paste('Surv(', time(), ',', endpoint(), ') ~ ', adjs_variables, " + ", strat_variables)
          
       } else{
          
-         paste0('Surv(', input$time, ',', input$endpoint, ') ~ ', adjs_variables )
+         paste('Surv(', time(), ',', endpoint(), ') ~ ', adjs_variables )
       }
       
    })
    
    #Printing the cox model in text
    output$cox_model <- renderText({
-      validate(need(input$cox_variables, ""))    # A variable has to be selected
+      validate(need(cox_variables(), ""))    # A variable has to be selected
       cox_fit_text()
    })
    
    #Building the cox table
    output$cox <- renderTable({
       #There has to be a variable selected
-      validate(need(input$cox_variables, "Please select variables to add to the model"))
+      validate(need(cox_variables(), "Please select variables to add to the model"))
       
       cox_fit <- coxph(as.formula(cox_fit_text()), data = subset_data())
       
