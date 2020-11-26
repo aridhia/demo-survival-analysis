@@ -1,0 +1,17 @@
+  
+@import '/assets/application-8b0cd7e75bb6e10c50ad7d51865ee367.css';
+.tab-content{margin:25px 0 0 0}
+body {position:relative}
+p {color: rgba(0,0,0,.75);}
+.well,.nb {background-color:rgb(235, 245, 247);border-radius:3px;box-shadow:none}
+.nb {padding:10px;margin: 25px 0}
+input[type="text"],input[type="password"],input[type="datetime"],input[type="datetime-local"],input[type="date"],input[type="month"],input[type="time"],input[type="week"],input[type="number"],input[type="email"],input[type="url"],input[type="search"],input[type="tel"],input[type="color"],.uneditable-input {height:30px !important}
+.nav-tabs {padding-left: 10px}
+h1 {text-align:center;border-bottom:1px solid rgba(0, 0, 0, .1);font-size:25px;margin:25px auto}
+h2 {font-size:18px;margin:10px 0;line-height:initial}
+h3,h4 {font-size:20px;line-height:initial;margin: 0 0 15px 0}
+h4 {margin: 15px 0 5px 0;font-weight: 400;font-size: 14px;text-transform: uppercase;border-bottom: 1px solid rgba(0,0,0,.1)}
+ol {list-style-type:decimal;margin:0 0 10px 25px}
+ol li {list-style-type:decimal;color: rgba(0,0,0,.75)}
+.row ul li, .row ol li {padding: 0 0 0 1em;list-style-type: initial;margin: 0 0 0 1em}
+table {text-align: center; background-color: rgb(235,245,247); border-collapse: collapse;}

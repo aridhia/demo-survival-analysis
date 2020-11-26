@@ -1,5 +1,5 @@
 
-
+# Chose value UI
 chooseValueUI <- function(id){
   ns <- NS(id)
   
@@ -7,6 +7,7 @@ chooseValueUI <- function(id){
 }
 
 
+# Returns the value chosen for the filter
 chooseValue <- function(input, output, session, values, label = "Select a value") {
   ns <- session$ns
   

@@ -10,15 +10,9 @@ library(dplyr)
 library(tidyr)
 library(DT)
 
-
+# Path to the data
 
 tables <- list.files(path = "./data", full.names = FALSE)
-
-
-# Importing data ----------------------
-
-data <- read.csv("./data/bladder.csv")
-
 
 
 

@@ -7,11 +7,13 @@
 
   fluidPage(
     
+    theme = "style.css",
+    
     #####################
     ####### TITLE #######
     #####################
     
-    titlePanel("Survival Analysis"),
+    titlePanel(h1("Survival Analysis")),
     
     
     ########################
@@ -136,7 +138,7 @@
                              
                              # Data Preview
                              h4(strong("Data Preview")),
-                             div(
+                             tags$table(
                                style = "width: 70%; font-size : 80%",
                                dataTableOutput("data_table")
                              ),

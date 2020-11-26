@@ -1,4 +1,6 @@
 
+
+# Choose column UI function
 chooseColumnUI <- function(id){
   ns <- NS(id)
   
@@ -6,7 +8,7 @@ chooseColumnUI <- function(id){
 }
 
 
-
+# Returns the UI select input and the chosen column
 choosenColumn <- function(input, output, session, data, label = "Choose a column", multiple = FALSE){
   ns <- session$ns
   
@@ -30,7 +32,7 @@ choosenColumn <- function(input, output, session, data, label = "Choose a column
   
 }
 
-
+# Returns the values of the chosen column
 columnValues <- function(input, output, session, data, column){
   ns <- session$ns
           
