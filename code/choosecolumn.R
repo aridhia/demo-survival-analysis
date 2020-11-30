@@ -37,7 +37,11 @@ columnValues <- function(input, output, session, data, column){
   ns <- session$ns
           
   values <- reactive({
-    data()[, column()]
+    if (is.null(data())){
+      return(NULL)
+    } else {
+      data()[, column()]
+    }
   })
     
   

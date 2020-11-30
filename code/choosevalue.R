@@ -11,9 +11,13 @@ chooseValueUI <- function(id){
 chooseValue <- function(input, output, session, values, label = "Select a value") {
   ns <- session$ns
   
+  r_values <- reactive({
+    values()
+  })
+  
   output$choose_value_ui <- renderUI({
-    v <- values()
-
+    
+    v <- r_values()
 
     if (is.numeric(v)){
       sliderInput(ns("choose_value"), label = label, 
@@ -33,3 +37,4 @@ chooseValue <- function(input, output, session, values, label = "Select a value"
   
   return(value)
 }
+

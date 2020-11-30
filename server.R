@@ -10,20 +10,20 @@ function(input, output, session) {
    # Tab 1 - ANALYSIS SET UP ----------------------------------------------------------------------
    
    data <- reactive({
-      table_name <- input$choose_data
-      if (table_name == "") {
+      if (input$choose_data == "") {
          return(NULL)
       }
-      file <- file.path("data", paste(table_name))
+
+      # table_name <- input$choose_data
+
+      file <- file.path("data", paste(input$choose_data))
       read.csv(file)
    })
-   
+
    # DataTable to Preview Data
    
-   output$data_table <- DT::renderDataTable(
-      data(),
-      options = list(scrollX = TRUE, pageLength = 5, dom = 't'),
-      class = "display nowrap compact"
+   output$data_table <- renderDataTable(
+      data(), options = list(scrollX = TRUE, pageLength = 5, dom = 't', searching = FALSE)
    )
    
 
@@ -86,10 +86,22 @@ function(input, output, session) {
    
    
    # Tab 3 - KEPLAN-MEIER ----------------------------------------------------------------------
-   
    endpoint <- callModule(choosenColumn, "endpoint", data, label = "Choose column that contains endpoint information:")
    time <- callModule(choosenColumn, "time", data, label = "Choose column that contains survival time information:")
+   time_values <- callModule(columnValues, "time_values", data, column = time)
+
    stratification_kep <- callModule(choosenColumn, "stratification_kep", data, label = "Choose the stratification variable:")
+   
+
+   # Construct slider input 
+   
+   output$xvalue <- renderUI({
+       sliderInput('xvalue',
+                   'Select a time: ',
+                   min = min(time_values()),
+                   max = max(time_values()),
+                   value = min(time_values()))
+   })
    
    # Construct the Keplan-Meier plot 
    output$kep <- renderPlot({

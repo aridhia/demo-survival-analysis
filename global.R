@@ -8,13 +8,10 @@ library(survminer)
 library(survival)
 library(dplyr)
 library(tidyr)
-library(DT)
 
 # Path to the data
 
 tables <- list.files(path = "./data", full.names = FALSE)
-
-
 
 # Source everything on the code folder --------------------------
 

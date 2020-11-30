@@ -6,7 +6,6 @@
 
 
   fluidPage(
-    
     theme = "style.css",
     
     #####################
@@ -28,14 +27,15 @@
         # Tab 3 ANALYSIS SET UP --------------------------------------------
         
         conditionalPanel(condition = "input.tabs == 1",
-                         
+
                          # Select data
                          selectInput(
                            inputId = "choose_data",
                            label = "Choose data",
-                           choices = tables
+                           choices = tables,
+                           selected = NULL
                          )
-          
+
           ),
         
         
@@ -74,7 +74,7 @@
                          
                          # Select years to get survival probability
                          
-                         sliderInput('xvalue', 'Select a time: ', min = min(data$time), max = max(data$time), value = min(data$time))
+                         uiOutput('xvalue')
                          
                          
         ),
@@ -139,7 +139,6 @@
                              # Data Preview
                              h4(strong("Data Preview")),
                              tags$table(
-                               style = "width: 70%; font-size : 80%",
                                dataTableOutput("data_table")
                              ),
                              
