@@ -96,6 +96,7 @@ function(input, output, session) {
    # Construct slider input 
    
    output$xvalue <- renderUI({
+      
        sliderInput('xvalue',
                    'Select a time: ',
                    min = min(time_values()),
@@ -106,6 +107,7 @@ function(input, output, session) {
    # Construct the Keplan-Meier plot 
    output$kep <- renderPlot({
       
+      validate(need(stratification_kep(), "Please select stratification variable"))
       
       # Survival function - for ggsurvplot has to be inside the renderPlot function
       kmdata <- surv_fit(as.formula(paste('Surv(', time(), ',', endpoint(), ') ~ ',stratification_kep())),data=subset_data())
@@ -125,11 +127,14 @@ function(input, output, session) {
    
    # Survival function outside renderPlot function
    runSur <- reactive({
+      validate(need(stratification_kep(), ""))
+      
       survfit(as.formula(paste('Surv(', time(), ',', endpoint(), ') ~ ', stratification_kep())), data=subset_data())
    })
    
    # Survival table
    output$survprob <- renderTable({
+      validate(need(stratification_kep(), ""))
       
       table <- as.data.frame(summary(runSur(), times = input$xvalue)[c("surv", "time", "strata")]) 
       table

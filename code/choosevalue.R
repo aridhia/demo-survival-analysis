@@ -17,6 +17,8 @@ chooseValue <- function(input, output, session, values, label = "Select a value"
   
   output$choose_value_ui <- renderUI({
     
+    validate(need(r_values(), "Please select characteristics to compare"))
+    
     v <- r_values()
 
     if (is.numeric(v)){

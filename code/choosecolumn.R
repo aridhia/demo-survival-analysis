@@ -17,8 +17,8 @@ choosenColumn <- function(input, output, session, data, label = "Choose a column
   })
   
   output$choose_column_ui <- renderUI({
-    selectInput(ns("choose_column"), 
-                choices = columns(),
+    selectizeInput(ns("choose_column"), 
+                choices = c("", columns()),
                 label = label,
                 multiple = multiple)
   })
@@ -37,6 +37,8 @@ columnValues <- function(input, output, session, data, column){
   ns <- session$ns
           
   values <- reactive({
+    validate(need(column(), "Please select column"))
+             
     if (is.null(data())){
       return(NULL)
     } else {
