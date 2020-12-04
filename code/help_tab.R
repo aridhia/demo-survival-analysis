@@ -42,7 +42,7 @@ documentation_tab <- function() {
                      column(
                        6,
                        h3("Walkthrough video"),
-                       tags$video(src="no_audio_surv.mp4", type = "video/mp4", width="100%", height = "350", frameborder = "0", controls = NA),
+                       tags$video(src="survival.mp4", type = "video/mp4", width="100%", height = "350", frameborder = "0", controls = NA),
                        p(class = "nb", "NB: This mini-app is for provided for demonstration purposes, is unsupported and is utilised at user's 
                        risk. If you plan to use this mini-app to inform your study, please review the code and ensure you are 
                        comfortable with the calculations made before proceeding. ")

@@ -1,17 +1,62 @@
-# Survival Analysis App
+# Survival Analysis 
 
-This Shiny App was developed to easily visualise a survival analysis. 
+This Shiny App was developed to easily visualize a survival analysis. 
 
-It has 4 tabs, each one performing a different step of the survival analysis:
+**Survival analyses** use a set of statistical approaches to investigate the time it takes for an event of interest to occur. The event of interest can be recurrence, remission, progression or death, among others. In Survival studio, two or more groups are compared with respect to the time to this specific event. 
+In some cases, the event may not be observed in some individuals within the study time period, then, this observation would be “censored” and survival time would be the last known time the patient or participant was known  not to suffer the event. 
 
-1. **Fist tab** is the analysis set up. The user has to select the variable containing the information of whether the event took place or not and the time variable. It also allows to filter the dataset, the filter applied in this step will be used in the rest of the analyses.
+Survival analysis use the following methods:
 
-2. **Second tab** is used to develop a characteristics table comparing two populations of the study. It allows the user to choose:
-    * The stratification variable to set up the populations to compare
-    * The variables shown in the table
-    * Whether to show the p-value or not
-  
-3. **Third tab** builds a Keplan-Meier graph with the variables selected in the first tab. It allows to choose the stratification variable and a sliding bar controls the table containing the survival probability at the chosen time. 
+<details><summary> <b> 1. Keplan-Meier plots </b> </summary>
 
-4. **Fourth tab** builds a Cox Model; the user can easily add variables and strata to the model by selecting different variables.
+The Kaplan-Meier plot and it is used to visualize the probability of survival in each of the time intervals.
+<p align="center">
+  <img width="460" height="300" src="https://s3.amazonaws.com/cdn.graphpad.com/faq/1747/images/1747d.gif">
+</p>
 
+</details>
+
+<details><summary> <b>2. Log-Rank Test</b> </summary>
+
+The log-rank test compares the Kaplan-Meier survival curves of both groups. Its H<sub>0</sub> is that survival curves of two populations do not differ.
+
+It is not suitable for continuous predictors. 
+
+</details>
+
+<details><summary> <b>3. Cox Proportional Hazards Regression</b> </summary>
+
+Describes the effect of continuous or categorical predictors on survival. Whereas the log-rank test compares two Kaplan-Meier survival curves (i.e. splitting the population into treatment groups), the Cox proportional hazards models considers other covariates when comparing survival of patients groups. 
+
+The Hazard Ratio (HR):
+
+<p align="center">
+  <img src="./www/hr">
+</p>
+
+</details>
+
+## About the Survival Analysis App
+
+The app has four tabs:
+
+1. Analysis set up: Choose dataset, choose event and time variables, apply filters
+2. Table of statistics
+3. Keplan-Meier Plot
+4. Cox Model
+
+### Checkout and run
+
+You can clone this repository by using the command:
+
+```clone
+git clone https://github.com/aridhia/demo-survival-analysis
+```
+Open the .Rproj file in RStudio and run `runApp()` to run the app.
+
+### Deploying to the workspace
+
+1. Create a new mini-app in the workspace called "survival-app" and delete the folder created for it
+2. Download this GitHub repo as a .ZIP file, or zip all the files
+3. Upload the .ZIP file to the workspace and upzip it inside a folder called "survival-app"
+4. Run the app in your workspace
