@@ -31,7 +31,7 @@ Describes the effect of continuous or categorical predictors on survival. Wherea
 The Hazard Ratio (HR):
 
 <p align="center">
-  <img src="./www/hr">
+  <img src="./www/hr.PNG">
 </p>
 
 </details>
