@@ -45,6 +45,8 @@ The app has four tabs:
 3. Keplan-Meier Plot
 4. Cox Model
 
+This R Shiny mini-app reads the data from the `data` directory. If you want to work with your own data, just add the desired CSV file to the `data` folder and choose it in the app.
+
 ### Checkout and run
 
 You can clone this repository by using the command:
