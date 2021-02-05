@@ -4,38 +4,25 @@ documentation_tab <- function() {
                      fluidRow(column(
                        6,
                        h3("Survival Analysis"), 
-                       p("This mini-app allows you to perform a survival analysis. In a survival analysis, two or more groups are compared with respoect to the time of a specific event. In some cases,
-                         the event may not occur during the observation period, then the time object is called the censored time."),
-                       p("Survival analyses use the following methods:"),
+                       p("This mini-app allows you to perform a survival analysis. The following tests are typically used in survival analysis: "),
                        tags$ol(
                          tags$li(strong("Keplan-Meier plots "), "are used to visualize the probability of survival in each of the time intervals."),
                          tags$li(strong("Cox Proportional Hazards Regression "), "describes the effect of continuous or categorical predictors on survival, this method 
                                  considers one or more than one covariates when considering survival of patients. This regression gives the Hazard Ratio (HR) of Experimental Vs.
                                  Control, if the HR is less than one, the hazard decreases (favouring the experimental group)")
                        ),
-                       h4("Mini-app layout"),
-                       p("The mini-app contains three tabs; this help tab gives you an overview of the mini-app itself."),
-                       
-                       h5("To use the mini-app"),
-                       p("The data being used by the app is the bladder dataset from the survimer R package, to use a different dataset you should store the 
-                         csv file in the data folder" ),
-                       
-                       
+                       h4("To use the mini-app"),
+                       p("The datasets available in the app are located in the 'data' folder, if you wish to a different dataset, you can save the CSV file in the 'data' folder." ),
                        tags$ol(
-                         tags$li("The first tab is used for ", strong("Setting up the analysis."), " The user has to select the variable containing the information of 
-                                 whether the event took place or not and the time variable. It also allows to filter the dataset, the filter applied in this step will 
-                                 be used in the rest of the analyses."), 
-                         
+                         tags$li("The first tab is used for ", strong("Setting up the analysis."), " The user has to select the variable containing the endpoint information or not and the time variable. 
+                         It also allows to filter the dataset, which will be applied the rest of the analyses."), 
                          tags$li("The second tab prints a ", strong("Table of characteristics"), 
-                                 "you have to choose the stratification variable, the variables shown in the table and whether to show the p-value or not from the
-                                 left-hand menu"),
-                         tags$li("In the third tab builds a ", strong("Keplan-Meier graph "), 
-                                 "using the variables selected in the analysis set up tab. It allows to choose the stratification variable and the slinding bar controls
-                                 the table containing the survival probability at the chosen timek"), 
-                         tags$li("Finally, the fourth tab build the ", strong("Cox Model "), "you can add variables and stratas to the model by selecting the different 
-                        variables from the left-hand menu")
+                                 "you must choose a stratification variable, then you can add variables to the table; you can choose whether to show the p-value or not."),
+                         tags$li("In the third tab builds a ", strong("Keplan-Meier graph. "), 
+                                 "You can choose the stratification variablia and use the slinding bar to check the survival at any time point."), 
+                         tags$li("Finally, the fourth tab builds the ", strong("Cox Model "), "it allows you to add variables and stratas to the model.")
                        ),
-                       p("You can experiment with any number of combinations, selecting different outcome variables, stratification variables or adding different variables 
+                       p("You can experiment with any number of combinations, selecting different outcome or stratification variables or adding different variables 
                          to the Cox Model."),
                        br()
                      ),

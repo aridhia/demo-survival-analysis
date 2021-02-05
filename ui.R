@@ -12,7 +12,7 @@
     ####### TITLE #######
     #####################
     
-    titlePanel(h1("Survival Analysis")),
+    titlePanel("Survival Analysis"),
     
     
     ########################
