@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /home/app
+
+R -e "require(shiny); runApp(port = 8080, launch.browser = FALSE, host = '0.0.0.0')"
