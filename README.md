@@ -7,40 +7,15 @@ In some cases, the event may not be observed in some individuals within the stud
 
 Survival analysis use the following methods:
 
-<details><summary> <b> 1. Keplan-Meier plots </b> </summary>
-
-The Kaplan-Meier plot and it is used to visualize the probability of survival in each of the time intervals.
-<p align="center">
-  <img width="460" height="300" src="https://s3.amazonaws.com/cdn.graphpad.com/faq/1747/images/1747d.gif">
-</p>
-
-</details>
-
-<details><summary> <b>2. Log-Rank Test</b> </summary>
-
-The log-rank test compares the Kaplan-Meier survival curves of both groups. Its H<sub>0</sub> is that survival curves of two populations do not differ.
-
-It is not suitable for continuous predictors. 
-
-</details>
-
-<details><summary> <b>3. Cox Proportional Hazards Regression</b> </summary>
-
-Describes the effect of continuous or categorical predictors on survival. Whereas the log-rank test compares two Kaplan-Meier survival curves (i.e. splitting the population into treatment groups), the Cox proportional hazards models considers other covariates when comparing survival of patients groups. 
-
-The Hazard Ratio (HR):
-
-<p align="center">
-  <img src="./www/hr.PNG">
-</p>
-
-</details>
+1. **Keplan-Meier plots**: The Kaplan-Meier plot and it is used to visualize the probability of survival in each of the time intervals.
+2. **Log-Rank Test**: The log-rank test compares the Kaplan-Meier survival curves of both groups. Its H<sub>0</sub> is that survival curves of two populations do not differ. It is not suitable for continuous predictors. 
+3. **Cox Proportional Hazards Regression**: Describes the effect of continuous or categorical predictors on survival. Whereas the log-rank test compares two Kaplan-Meier survival curves (i.e. splitting the population into treatment groups), the Cox proportional hazards models considers other covariates when comparing survival of patients groups. 
 
 ## About the Survival Analysis App
 
 The app has four tabs:
 
-1. Analysis set up: Choose dataset, choose event and time variables, apply filters
+1. Analysis set up
 2. Table of statistics
 3. Keplan-Meier Plot
 4. Cox Model
@@ -61,4 +36,5 @@ Open the .Rproj file in RStudio and run `runApp()` to run the app.
 1. Create a new mini-app in the workspace called "survival-app" and delete the folder created for it
 2. Download this GitHub repo as a .ZIP file, or zip all the files
 3. Upload the .ZIP file to the workspace and upzip it inside a folder called "survival-app"
-4. Run the app in your workspace
+4. Run the `dependencies.R` script to install all the packages the app uses
+5. Run the app in your workspace

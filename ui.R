@@ -7,12 +7,14 @@
 
   fluidPage(
     theme = "style.css",
-    
+    shiny::tags$link(rel="shortcut icon", href = "tile.ico")
+    ,
     #####################
     ####### TITLE #######
     #####################
     
-    titlePanel("Survival Analysis"),
+    titlePanel("Survival Analysis",
+               windowTitle = "Survival Analysis"),
     
     
     ########################
