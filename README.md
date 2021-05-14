@@ -29,7 +29,7 @@ You can clone this repository by using the command:
 ```clone
 git clone https://github.com/aridhia/demo-survival-analysis
 ```
-Open the .Rproj file in RStudio and run `runApp()` to run the app.
+Open the .Rproj file in RStudio, source the script `dependencies.R` to install all the packages required by the app, and run `runApp()` to start the app.
 
 ### Deploying to the workspace
 
