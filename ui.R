@@ -7,8 +7,7 @@
 
   fluidPage(
     theme = "style.css",
-    shiny::tags$link(rel="shortcut icon", href = "tile.ico")
-    ,
+    tags$head(tags$link(rel="shortcut icon", href="favicon.ico")),
     #####################
     ####### TITLE #######
     #####################
