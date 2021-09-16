@@ -145,7 +145,7 @@ function(input, output, session) {
       # Need the stratification variable to build the table, no message is passed to avoid having multiple messages on the screen
       validate(need(stratification_kep(), ""))
       
-      table <- as.data.frame(summary(runSur(), times = input$xvalue)[c("surv", "time", "strata")]) 
+      table <- as.data.frame(summary(runSur(), times = input$xvalue, extend = TRUE)[c("surv", "time", "strata")]) 
       table
    })
    

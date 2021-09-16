@@ -4,3 +4,4 @@
 *.RData
 *.Ruserdata
 rsconnect/
+.Rproj.user
