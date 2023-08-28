@@ -90,7 +90,7 @@ function(input, output, session) {
    }, sanitize.text.function = identity)
    
    
-   # Tab 3 - KEPLAN-MEIER ----------------------------------------------------------------------
+   # Tab 3 - KAPLAN-MEIER ----------------------------------------------------------------------
    
    
    endpoint <- callModule(choosenColumn, "endpoint", data, label = "Choose column that contains endpoint information:")          # Display columns of the chosen dataset
@@ -111,7 +111,7 @@ function(input, output, session) {
                    value = min(time_values()))
    })
    
-   # Construct the Keplan-Meier plot 
+   # Construct the Kaplan-Meier plot 
    output$kep <- renderPlot({
       
       # Need the stratification variable to build the Kaplan-Meier graph

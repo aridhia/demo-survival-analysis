@@ -7,7 +7,7 @@ In some cases, the event may not be observed in some individuals within the stud
 
 Survival analysis use the following methods:
 
-1. **Keplan-Meier plots**: The Kaplan-Meier plot and it is used to visualize the probability of survival in each of the time intervals.
+1. **Kaplan-Meier plots**: The Kaplan-Meier plot and it is used to visualize the probability of survival in each of the time intervals.
 2. **Log-Rank Test**: The log-rank test compares the Kaplan-Meier survival curves of both groups. Its H<sub>0</sub> is that survival curves of two populations do not differ. It is not suitable for continuous predictors. 
 3. **Cox Proportional Hazards Regression**: Describes the effect of continuous or categorical predictors on survival. Whereas the log-rank test compares two Kaplan-Meier survival curves (i.e. splitting the population into treatment groups), the Cox proportional hazards models considers other covariates when comparing survival of patients groups. 
 
@@ -17,7 +17,7 @@ The app has four tabs:
 
 1. Analysis set up
 2. Table of statistics
-3. Keplan-Meier Plot
+3. Kaplan-Meier Plot
 4. Cox Model
 
 This R Shiny mini-app reads the data from the `data` directory. If you want to work with your own data, just add the desired CSV file to the `data` folder and choose it in the app.

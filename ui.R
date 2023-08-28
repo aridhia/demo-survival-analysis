@@ -65,7 +65,7 @@
         ),
         
         
-        # Tab 3 KEPLAN-MEIER -------------------------------------
+        # Tab 3 KAPLAN-MEIER -------------------------------------
         
         conditionalPanel(condition = "input.tabs == 3",
                          
@@ -181,9 +181,9 @@
                              )
                     ),
                     
-                    # Tab 3 - KEPLAN-MEIER ----------------------------------------------------------------------
+                    # Tab 3 - KAPLAN-MEIER ----------------------------------------------------------------------
                     
-                    tabPanel("Keplan-Meier", 
+                    tabPanel("Kaplan-Meier", 
                              value = 3,
                              
                              p("This table will show the survival probability on the selected time in the slider."),
